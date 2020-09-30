@@ -2,11 +2,14 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Data;
 using SalesWebMvc.Services;
+using System.Globalization;
+using System.Collections.Generic;
 
 namespace SalesWebMvc
 {
@@ -46,6 +49,16 @@ namespace SalesWebMvc
         //o parâmetro seedingservice só é possível por conta do registro na injeção de dependências
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedingService seedingService)
         {
+            var culture = new CultureInfo("pt-BR");
+            var localizationOptions = new RequestLocalizationOptions()
+            {
+                DefaultRequestCulture = new RequestCulture(culture),
+                SupportedCultures = new List<CultureInfo> { culture },
+                SupportedUICultures = new List<CultureInfo> { culture }
+            };
+
+            app.UseRequestLocalization(localizationOptions);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
